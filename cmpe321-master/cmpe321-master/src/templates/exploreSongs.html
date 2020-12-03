@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <title>Explore Songs</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    /* Create two equal columns that floats next to each other */
+    .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+        height: 90vh;
+        /* Should be removed. Only for demonstration */
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+
+    nav ul {
+        height: 75vh;
+        width: 100%;
+    }
+
+    nav ul {
+        overflow: hidden;
+        overflow-y: scroll;
+        box-shadow: 10px 10px 5px grey;
+
+    }
+
+    .dropbtn {
+        background-color: black;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .dropbtn:hover,
+    .dropbtn:focus {
+        background-color: lightgray;
+        color: black;
+    }
+
+    #myInput {
+        box-sizing: border-box;
+        background-image: url('searchicon.png');
+        background-position: 14px 12px;
+        background-repeat: no-repeat;
+        font-size: 16px;
+        padding: 14px 20px 12px 45px;
+        border: none;
+        border-bottom: 1px solid #ddd;
+    }
+
+    #myInput:focus {
+        outline: 3px solid #ddd;
+    }
+
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f6f6f6;
+        min-width: 100%;
+        overflow: auto;
+        border: 1px solid #ddd;
+        z-index: 1;
+    }
+
+    .dropdown-content button {
+        color: black;
+        width: inherit;
+        text-decoration: none;
+        display: block;
+
+    }
+
+    .dropdown button:hover {
+        background-color: #ddd;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .button {
+        background-color: #4CAF50;
+        /* Green */
+        border: none;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        width: 100%;
+        vertical-align: middle;
+
+    }
+
+    .button5 {
+        background-color: white;
+        color: black;
+        border: 2px solid #555555;
+    }
+
+    .button5:hover {
+        background-color: #555555;
+        color: white;
+    }
+</style>
+<script>
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("button");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+    function selectGenre(genre) {
+        //alert(clicked_id);
+
+        songs = document.getElementsByClassName("songs");
+
+        for (i = 0; i < songs.length; i++) {
+            if (songs[i].getAttribute("name").includes(genre)) {
+                songs[i].style.display = "";
+            }
+            else {
+                songs[i].style.display = "none";
+            }
+        }
+        dropdown_button = document.getElementById("genreName");
+
+        dropdown_button.innerHTML = genre;
+
+    }
+
+</script>
+
+<body>
+
+    <h2>You can explore songs here!</h2>
+
+    <form action="/listenerProfile", method="GET">
+        <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+        <input class="button button5" style="width: 10%;" type="submit" value="Return Your Profile">
+    </form>
+
+    <div class="row">
+
+        <div class="column" style="background-color:#bbb;">
+            <h2>Filter by Genre</h2>
+            {% if genres|length == 0%}
+            <h3>No Albums!</h3>
+            {% else %}
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn" id="genreName">Choose Genre</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    {% for genre in genres %}
+                    <button id="{{genre[0]}}" onClick="selectGenre(this.id)" style="width: 100%;">{{genre[0]}}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+            <br>
+            <nav>
+                <ul class="w3-ul" style="height: 68vh;">
+                    {% for song in songs %}
+                    <li class="songs" name="{{song[2]}}">{{song[0]}} - {{song[1]}}</li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+
+        <div class="column" style="background-color:#aaa;">
+            <h2>Filter by keyword!</h2>
+
+            <form action="/exploreSongs" , method="get">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <label for="keyword">Keyword:</label><br>
+                <input type="text" id="keyword" name="keyword" required><br><br>
+                <input type="submit" value="Search">
+            </form>
+            
+            {% if searched_songs|length == 0%}
+            <h3>No result containing that keyword!</h3>
+            {% else %}
+            <nav>
+                <ul class="w3-ul">
+                    {% for song in searched_songs %}
+                    <li>{{song[0]}} - {{song[1]}}</li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Archive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 33%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+
+        }
+
+        .button5 {
+            background-color: white;
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button5:hover {
+            background-color: #555555;
+            color: white;
+        }
+    </style>
+    <title>DBtify Archive</title>
+</head>
+
+<body>
+
+    <h2>You can see all the archive here!</h2>
+
+    <form action="/listenerProfile", method="GET">
+        <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+        <input class="button button5" style="width: 10%;" type="submit" value="Return Your Profile">
+    </form>
+
+    {% if success == True %}
+        <p style="color: red;">You have liked {{liked_one}} successfully!</p>
+    {% else %}
+        {% if duplicate%}
+            <p style="color: red;">You have already liked {{liked_one}} before! If any song is added after you liked before, now they are liked too.</p>
+        {% endif %}
+    {% endif %}
+
+    <div class="row">
+        <div class="column" style="background-color:#aaa;">
+            <h2>Artists</h2>
+            <p>All the artists in database.</p>
+
+            {% if artist_list|length == 0%}
+            <h3>No artist registered in archive!</h3>
+            {% else %}
+            <form action="/viewArtist" , method="GET">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <select style="width: 100%; height: 70vh;" id="artist" name="artist" size=10 required>
+                    {% for artist in artist_list %}
+
+                    <option value="{{artist[0]}}">{{artist[1]}} {{artist[2]}}</option>
+
+                    {% endfor %}
+                </select>
+                <input class="button button5" type="submit" value="Go Artist Page!">
+            </form>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#bbb;">
+            <h2>Albums</h2>
+            <p>All the albums in database.</p>
+
+            {% if album_list|length == 0%}
+            <h3>No album registered in archive!</h3>
+            {% else %}
+            <form action="/viewAlbum" , method="GET">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <select style="width: 100%; height: 70vh;" id="album" name="album" size=10 required>
+                    {% for album in album_list %}
+
+                    <option name="album" value="{{album[0]}}">{{album[0]}} - {{album[2]}} ({{album[1]}})</option>
+
+                    {% endfor %}
+                </select>
+                <input class="button button5" type="submit" value="Go Album Page!">
+            </form>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#aaa;">
+            <h2>Songs</h2>
+            <p>All the songs in database.</p>
+
+            {% if song_list|length == 0%}
+            <h3>No song registered in archive!</h3>
+            {% else %}
+            <form action="/viewAll?listener={{id}}_{{username}}" , method="POST">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <select style="width: 100%; height: 70vh;" id="song" name="song" size=10 required>
+                    {% for song in song_list %}
+
+                    <option value="{{song[0]}}_{{song[1]}}">{{song[0]}} - {{song[1]}} ({{song[5]}} - {{song[4]}})</option>
+
+                    {% endfor %}
+                </select>
+                <input class="button button5" type="submit" value="Like Song!">
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+
+</html>

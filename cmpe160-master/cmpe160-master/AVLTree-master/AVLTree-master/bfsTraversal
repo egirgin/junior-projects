@@ -1,0 +1,20 @@
+/*
+	 * Perform breadth-first-traversal. The nodes in the tree are traversed row-by-row.
+	 * The BFS traversal order of the nodes is placed in bfsOrder list.  
+	 * 
+	 * @param tree		The root node of the tree to be traversed.
+	 */
+	public static void bfsTraversal(MyNode root) {
+		LinkedList<MyNode> queue = new LinkedList<MyNode>();
+		MyNode p;
+		
+		queue.add(root);
+		while (! queue.isEmpty()) {
+			p = queue.remove();
+			if (p.left != null)
+				queue.add(p.left);
+			if (p.right != null)
+				queue.add(p.right);	
+			bfsOrder.add(p.value);
+		}
+	}

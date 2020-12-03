@@ -1,0 +1,15 @@
+/*
+	 * Perform depth-first-traversal. The nodes in the tree are traversed
+	 * by going as deep as possible via the left node. When you reach the end, 
+	 * step one level back (up), and try the same with the right child (if possible).
+	 * The DFS traversal order of the nodes is placed in dfsOrder list.  
+	 * 
+	 * @param tree The root node of the tree to be traversed.
+	 */
+	public static void dfsTraversal(MyNode root) {
+		if (root == null)
+			return;
+		dfsTraversal(root.left);
+		dfsOrder.add(root.value);
+		dfsTraversal(root.right);		
+	}

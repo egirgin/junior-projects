@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{artist_name}} {{artist_surname}}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 33%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+
+        }
+
+        .button5 {
+            background-color: white;
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button5:hover {
+            background-color: #555555;
+            color: white;
+        }
+
+        .ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        .li {
+            float: left;
+        }
+
+        .li form input {
+            display: block;
+            color: white;
+            background-color: #333;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .li form input:hover {
+            background-color: #111;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <ul class="ul">
+        <li class="li" style="color: beige; font-size: 25px;">{{username}} is viewing the page of artist {{artist[0]}}
+            {{artist[1]}}
+        </li>
+        <li class="li">
+            <form action="/viewAll" , method="GET">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <input type="submit" value="Return To Archive">
+            </form>
+        </li>
+        <li class="li">
+            <form action="/listenerProfile" , method="GET">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <input type="submit" value="Return Your Profile">
+            </form>
+        </li>
+    </ul>
+
+
+    {% if success == True %}
+    <p style="color: red;">You have liked {{liked_one}} successfully!</p>
+    {% else %}
+    {% if duplicate%}
+    <p style="color: red;">You have already liked {{liked_one}} before! If any song is added after you liked before, now
+        they are liked too.</p>
+    {% endif %}
+    {% endif %}
+
+    <div class="row">
+        <div class="column" style="background-color:#bbb;">
+            <h2>Albums</h2>
+            <p>All the albums in database.</p>
+
+            {% if album_list|length == 0%}
+            <h3>No album registered in archive!</h3>
+            {% else %}
+            <form action="/viewArtist?listener={{id}}_{{username}}&artist={{artist[2]}}" , method="POST">
+                <select style="width: 100%; height: 70vh;" id="album" name="album" size=10 required>
+                    {% for album in album_list %}
+
+                    <option value="{{album[0]}}_{{album[2]}}">{{album[0]}} - {{album[2]}} ({{album[1]}})</option>
+
+                    {% endfor %}
+                </select>
+                <input class="button button5" type="submit" value="Like Album!">
+            </form>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#aaa;">
+            <h2>Songs</h2>
+            <p>All the songs in database.</p>
+
+            {% if song_list|length == 0%}
+            <h3>No song registered in archive!</h3>
+            {% else %}
+            <form action="/viewArtist?listener={{id}}_{{username}}&artist={{artist[2]}}" , method="POST">
+                <select style="width: 100%; height: 70vh;" id="song" name="song" size=10 required>
+                    {% for song in song_list %}
+
+                    <option value="{{song[0]}}_{{song[1]}}">{{song[0]}} - {{song[1]}} ({{song[5]}} - {{song[4]}})
+                    </option>
+
+                    {% endfor %}
+                </select>
+                <input class="button button5" type="submit" value="Like Song!">
+            </form>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#bbb;">
+            <h2>Contributions</h2>
+            <p>See all the artists made a song with {{artist[0]}} {{artist[1]}}.</p>
+            {% for song, contributors in cont_dict.items() %}
+                <ul style="height: 77vh; overflow: scroll">
+                    <h3>Song: {{song}}</h3>
+                {% for cont in contributors %}
+                    <li><strong>Partner: {{cont}}</strong></li>
+                {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+</html>

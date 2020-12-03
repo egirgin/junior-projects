@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        div.songs {
+            width: 40%;
+            height: 90vh;
+            overflow: visible;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+
+        }
+
+        .button5 {
+            background-color: white;
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button5:hover {
+            background-color: #555555;
+            color: white;
+        }
+    </style>
+    <script>
+        function addContributor() {
+            var target_select = document.getElementById("contributors");
+            var target_option = document.createElement("option");
+
+            var source_select = document.getElementById("source");
+            var source_option = source_select.options[source_select.selectedIndex];
+
+            target_option.text = source_option.text;
+            target_select.add(target_option);
+
+            source_select.remove(source_select.selectedIndex)
+        }
+        function removeContributor() {
+
+            var select = document.getElementById("contributors");
+            var option = select.options[select.selectedIndex];
+
+            select.remove(select.selectedIndex)
+
+            var source_select = document.getElementById("source");
+            source_select.add(option);
+        }
+
+        function setContributors() {
+
+            var select = document.getElementById("contributors");
+            var cont_list = document.getElementById("cont_list")
+
+            var contributors = ""
+
+            for (var i = 0, len = select.options.length; i < len; i++) {
+                opt = select.options[i];
+                contributors = contributors.concat(opt.text, "%")
+            }
+
+            cont_list.value = contributors
+
+        }
+    </script>
+</head>
+
+<body>
+
+    <h2>{{artist_name}} {{artist_surname}}</h2>
+    <form action="/artistProfile" , method="GET">
+        <input type="hidden" id="artist" name="artist" value="{{artist_name}}_{{artist_surname}}">
+        <input class="button button5" style="width: 10%;" type="submit" value="Return Artist Profile">
+    </form>
+
+    <form action="/artistProfile?artist={{artist_name}}_{{artist_surname}}" , method="POST">
+        <input type="hidden" id="artist" name="artist" value="{{artist_name}}_{{artist_surname}}">
+        <input type="hidden" id="deleteSong" name="deleteSong" value="True">
+        <input type="hidden" id="song_id" name="song_id" value="{{id}}">
+        <input class="button button5" style="width: 10%;" type="submit" value="Delete Song">
+    </form>
+
+    <div class="row">
+        <div class="column" style="background-color:#aaa;">
+
+            <h1>Modify song!</h1>
+
+            <form action="/songPage?song={{id}}&artist={{artist_name}}_{{artist_surname}}" , method="post">
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title" value="{{title}}"><br><br>
+                <label for="source">Choose contributors:</label><br>
+                <select style="width: 45%;" id="source" size=5>
+
+                    {% for artist in artists%}
+
+                    {% if artist[0] not in cont_ids %}
+
+                    <option value="{{artist[0]}}">{{artist[1]}} {{artist[2]}}</option>
+
+                    {% endif %}
+
+                    {% endfor %}
+
+                </select>
+
+                <select style="width: 45%;" name="contributors" id="contributors" size=5>
+
+                    {% for artist in artists%}
+
+                    {% if artist[0] in cont_ids %}
+
+                    <option value="{{artist[0]}}">{{artist[1]}} {{artist[2]}}</option>
+
+                    {% endif %}
+
+                    {% endfor %}
+
+
+                </select>
+
+                <button type="button" onclick="addContributor()">Add Contributor</button>
+                <button type="button" onclick="removeContributor()">Remove Contributor</button><br>
+                <input type="hidden" id="cont_list" name="cont_list" value="default_value">
+
+
+                <input type="submit" value="Submit" onclick="setContributors()">
+            </form>
+            {% if flag: %}
+            <p style="color: red;">Modified! Refresh page to see difference!</p>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#bbb;">
+            <h2>Album</h2>
+            <div class="songs">
+                <h2>{{album}}</h2>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

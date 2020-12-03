@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{title}}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        div.songs {
+            width: 40%;
+            height: 90vh;
+            overflow: visible;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+
+        }
+
+        .button5 {
+            background-color: white;
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button5:hover {
+            background-color: #555555;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>{{artist_name}} {{artist_surname}}</h2>
+    <form action="/artistProfile" , method="GET">
+        <input type="hidden" id="artist" name="artist" value="{{artist_name}}_{{artist_surname}}">
+        <input class="button button5" style="width: 10%;" type="submit" value="Return Artist Profile">
+    </form>
+
+    <form action="/artistProfile?artist={{artist_name}}_{{artist_surname}}" , method="POST">
+        <input type="hidden" id="artist" name="artist" value="{{artist_name}}_{{artist_surname}}">
+        <input type="hidden" id="deleteAlbum" name="deleteAlbum" value="True">
+        <input type="hidden" id="album_id" name="album_id" value="{{id}}">
+        <input class="button button5" style="width: 10%;" type="submit" value="Delete Album">
+    </form>
+
+    <div class="row">
+        <div class="column" style="background-color:#aaa;">
+
+            <h1>Modify album!</h1>
+
+            <form action="/albumPage?album={{id}}&artist={{artist_name}}_{{artist_surname}}" , method="post">
+                <label for="title">Title:</label><br>
+                <input type="text" id="title" name="title" value="{{title}}"><br>
+                <label for="Genre">Genre:</label><br>
+                <input type="text" id="genre" name="genre" value="{{genre}}"><br><br>
+
+                <input type="submit" value="Submit">
+            </form>
+            {% if flag: %}
+            <p style="color: red;">Modified! You can retrun to Artist Page using the button at top and see the change!
+            </p>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#bbb;">
+            <h2>Songs</h2>
+            <div class="songs">
+                <ul>
+                    {% for song in songs %}
+                    <li>{{song[0]}}-{{song[1]}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

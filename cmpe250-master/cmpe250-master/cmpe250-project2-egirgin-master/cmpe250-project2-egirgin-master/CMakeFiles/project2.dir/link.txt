@@ -1,0 +1,1 @@
+/usr/bin/c++.exe  -g  -Wl,--enable-auto-import CMakeFiles/project2.dir/main.cpp.o CMakeFiles/project2.dir/Passenger.cpp.o CMakeFiles/project2.dir/Simulator.cpp.o CMakeFiles/project2.dir/SecurityCounter.cpp.o CMakeFiles/project2.dir/LuggageCounter.cpp.o  -o project2.exe -Wl,--out-implib,libproject2.dll.a -Wl,--major-image-version,0,--minor-image-version,0  

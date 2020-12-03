@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Artists</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+
+        }
+
+        .button5 {
+            background-color: white;
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button5:hover {
+            background-color: #555555;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Log in or Sign up</h2>
+    <input class="button button5" style="width: 10%;" type="button" onclick="location.href='/';"
+    value="HomePage" />
+
+    <div class="row">
+        <div class="column" style="background-color:#aaa;">
+            <div class="w3-container" style="overflow-y: hidden;">
+                <h2>Use as existing artist!</h2>
+                <p>Choose your artist account!</p>
+
+                {% if artist_list|length == 0%}
+                <h3>No Artist Available. Please register an artist!</h3>
+                {% else %}
+                <form action="/artistProfile" , method="GET">
+                    <select style="width: 100%;" id="artist" name="artist" size=10 required>
+                        {% for row in artist_list %}
+
+                        <option value="{{row[1]}}_{{row[2]}}">{{row[1]}} {{row[2]}}</option>
+
+                        {% endfor %}
+                    </select>
+                    <input class="button button5" type="submit">
+                </form>
+                {% endif %}
+
+
+
+            </div>
+        </div>
+        <div class="column" style="background-color:#bbb;">
+            <div class="w3-container">
+                <h2>Create a new artist!</h2>
+                <form action="/artist" , method="post">
+                    <label for="name">Name:</label><br>
+                    <input type="text" id="name" name="name" required><br>
+                    <label for="surname">Surname:</label><br>
+                    <input type="text" id="surname" name="surname" required><br><br>
+                    <input type="submit" value="Create Artist">
+                </form>
+                {% if duplicate == True: %}
+                <h3 style="color:red">The artist {{name}} {{surname}} already exists! Check the artist in the list on
+                    the
+                    left!</h3>
+                {%else%}
+                {% if name|length : %}
+                <h3 style="color:red">The artist {{name}} {{surname}} is created successfully! Check that artist in the
+                    list on the
+                    left!</h3>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

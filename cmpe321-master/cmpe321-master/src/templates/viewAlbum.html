@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{album[2]}} Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        .success {
+            background-color: #ddffdd;
+            border-left: 6px solid #4CAF50;
+        }
+
+        .column {
+            float: left;
+            width: 50%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li form input {
+            display: block;
+            color: white;
+            background-color: #333;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li form input:hover {
+            background-color: #111;
+        }
+    </style>
+</head>
+
+<body>
+
+    <ul>
+        <li style="color: beige; font-size: 25px;">{{username}} is viewing the page of album {{album[0]}}-{{album[2]}}
+        </li>
+        <li>
+            <form action="/viewAll" , method="GET">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <input type="submit" value="Return To Archive">
+            </form>
+        </li>
+        <li>
+            <form action="/listenerProfile" , method="GET">
+                <input type="hidden" id="listener" name="listener" value="{{id}}_{{username}}">
+                <input type="submit" value="Return Your Profile">
+            </form>
+        </li>
+        <li>
+            <form action="/viewAlbum?listener={{id}}_{{username}}&album={{album[0]}}" , method="POST">
+                <input type="hidden" id="album" name="album" value="{{album[0]}}_{{album[2]}}">
+                <input type="submit" value="Like Album!">
+            </form>
+        </li>
+    </ul>
+
+
+    {% if success == True %}
+    <p style="color: red;">You have liked {{liked_one}} successfully!</p>
+    {% else %}
+    {% if duplicate %}
+    <p style="color: red;">You have already liked {{liked_one}} before! If any song is added after you liked before, now
+        they are liked too.</p>
+    {% endif %}
+    {% endif %}
+
+    <div class="column" style="background-color:#bbb;">
+        <div class="success">
+            <p><strong>Artist Name: </strong>{{album[3]}}</p>
+            <p><strong>Artist Surname: </strong>{{album[4]}}</p>
+            <p><strong>ID: </strong>{{album[0]}}</p>
+            <p><strong>Title: </strong>{{album[2]}}</p>
+            <p><strong>Genre: </strong>{{album[1]}}</p>
+        </div>
+
+        <div class="success">
+            {% for song in songs %}
+            <p><strong>{{song[0]}} - </strong>{{song[1]}}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+</html>

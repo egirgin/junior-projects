@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{{username}} Profile</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 33%;
+            padding: 10px;
+            height: 90vh;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        nav ul {
+            height: 75vh;
+            width: 100%;
+        }
+
+        nav ul {
+            overflow: hidden;
+            overflow-y: scroll;
+            box-shadow: 10px 10px 5px grey;
+
+        }
+
+        .dropbtn {
+            background-color: black;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropbtn:hover,
+        .dropbtn:focus {
+            background-color: lightgray;
+            color: black;
+        }
+
+        #myInput {
+            box-sizing: border-box;
+            background-image: url('searchicon.png');
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {
+            outline: 3px solid #ddd;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f6f6f6;
+            min-width: 100%;
+            overflow: auto;
+            border: 1px solid #ddd;
+            z-index: 1;
+        }
+
+        .dropdown-content button {
+            color: black;
+            width: inherit;
+            text-decoration: none;
+            display: block;
+
+        }
+
+        .dropdown button:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            width: 100%;
+            vertical-align: middle;
+
+        }
+
+        .button5 {
+            background-color: white;
+            color: black;
+            border: 2px solid #555555;
+        }
+
+        .button5:hover {
+            background-color: #555555;
+            color: white;
+        }
+    </style>
+
+    <script>
+        /* When the user clicks on the button,
+        toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("button");
+            for (i = 0; i < a.length; i++) {
+                txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+
+        function reply_click(clicked_id_name) {
+            //alert(clicked_id);
+
+            clicked_id = clicked_id_name.split("_")[0];
+
+            username = clicked_id_name.split("_")[1];
+
+            listener_likes = document.getElementsByClassName("listenerLikes");
+
+            for (i = 0; i < listener_likes.length; i++) {
+                if (listener_likes[i].getAttribute("name").includes(clicked_id)) {
+                    listener_likes[i].style.display = "";
+                }
+                else {
+                    listener_likes[i].style.display = "none";
+                }
+            }
+            dropdown_button = document.getElementById("friendName");
+
+            dropdown_button.innerHTML = username;
+
+        }
+
+        function popularArtist(selectedIndex) {
+
+
+            var popularArtistSelect = document.getElementById("popularArtists")
+
+            artist_id = popularArtistSelect[selectedIndex].getAttribute("value")
+
+            var song_likes = document.getElementById("popularSongsOfArtist").getElementsByTagName("li");
+
+            for (i = 0; i < song_likes.length; i++) {
+                if (song_likes[i].getAttribute("value") === artist_id) {
+                    song_likes[i].style.display = "";
+                }
+                else {
+                    song_likes[i].style.display = "none";
+                }
+            }
+
+
+
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <h2>{{username}} profile</h2>
+    <input class="button button5" style="width: 10%;" type="button"
+        onclick="location.href='/viewAll?listener={{id}}_{{username}}';" value="Go Archive" />
+    <input class="button button5" style="width: 10%;" type="button" onclick="location.href='/listener';"
+        value="Log Out" />
+    <input class="button button5" style="width: 10%;" type="button"
+        onclick="location.href='/exploreSongs?listener={{id}}_{{username}}';" value="Explore" />
+
+    <div class="row">
+        <div class="column" style="background-color:#aaa;">
+            <h2>Your Favorite Songs</h2>
+            <p>You've liked the songs below!</p>
+            {% if liked_songs|length == 0%}
+            <h3>No songs liked before!</h3>
+            {% else %}
+            <nav>
+                <ul class="w3-ul">
+                    {% for song in liked_songs %}
+                    <li>{{song[4]}} - {{song[10]}} {{song[11]}}</li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#bbb;">
+            <h2>Social Dbtify</h2>
+            <p>See what your friends liked! By default it shows all the liked songs except the ones you liked!</p>
+            {% if listener_list|length == 0%}
+            <h3>No other listener!</h3>
+            {% else %}
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn" id="friendName">Choose Friend</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                    {% for listener in listener_list %}
+                    <button id="{{listener[0]}}_{{listener[1]}}" onClick="reply_click(this.id)"
+                        style="width: 100%;">{{listener[1]}}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <br>
+            <br>
+            <nav>
+                <ul class="w3-ul" style="height: 68vh;">
+                    {% for song in all_liked_songs %}
+                    <li class="listenerLikes" name="{{song[0]}}">{{song[2]}} - {{song[3]}} {{song[4]}}</li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+
+        </div>
+        <div class="column" style="background-color:#aaa;">
+            <h2>Explore</h2>
+            <p>Check trending artists and songs below. By default it sorts all the songs liked.</p>
+
+            {% if artists|length == 0%}
+            <p>No artists created yet!</p>
+            {% else %}
+            <p>Choose Artist</p>
+            <select style="width: 100%; height: 25vh;" id="popularArtists" name="popularArtists" size=10
+                onchange="popularArtist(this.selectedIndex);" required>
+                {% for artist in likes_per_artist %}
+
+                <option value="{{artist[1]}}">{{artist[2]}} {{artist[3]}} - {{artist[0]}} likes</option>
+
+                {% endfor %}
+
+                {% for non_liked_artist in artists %}
+                {% if not non_liked_artist[0] in liked_artists %}
+
+                <option value="{{non_liked_artist[0]}}">{{non_liked_artist[1]}} {{non_liked_artist[2]}} - 0 likes
+                </option>
+                {% endif %}
+                {% endfor %}
+            </select>
+
+            <p>Populer Songs</p>
+            <nav>
+                <ul class="w3-ul" style="height: 40vh;" id="popularSongsOfArtist">
+                    {% for song in songs_per_like %}
+                    <li value="{{song[3]}}">{{song[1]}} - {{song[4]}} {{song[5]}} ({{song[2]}})</li>
+                    {% endfor %}
+
+                    {% for non_liked_song in songs %}
+                    {% if not non_liked_song[0] in liked_song_ids %}
+
+                    <li value="{{non_liked_song[2]}}">{{non_liked_song[1]}} - {{non_liked_song[3]}} {{non_liked_song[4]}} (0) </li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+
+</html>

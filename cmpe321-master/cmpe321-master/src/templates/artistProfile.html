@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{{name}} {{surname}}</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Create two equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 50%;
+      padding: 10px;
+      height: 90vh;
+      /* Should be removed. Only for demonstration */
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .button {
+      background-color: #4CAF50;
+      /* Green */
+      border: none;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      width: 99%;
+      vertical-align: middle;
+
+    }
+
+    .button5 {
+      background-color: white;
+      color: black;
+      border: 2px solid #555555;
+    }
+
+    .button5:hover {
+      background-color: #555555;
+      color: white;
+    }
+  </style>
+
+  <script>
+    function addContributor() {
+      var target_select = document.getElementById("contributors");
+      var target_option = document.createElement("option");
+
+      var source_select = document.getElementById("source");
+      var source_option = source_select.options[source_select.selectedIndex];
+
+      target_option.text = source_option.text;
+      target_select.add(target_option);
+
+      source_select.remove(source_select.selectedIndex)
+    }
+    function removeContributor() {
+
+      var select = document.getElementById("contributors");
+      var option = select.options[select.selectedIndex];
+
+      select.remove(select.selectedIndex)
+
+      var source_select = document.getElementById("source");
+      source_select.add(option);
+    }
+
+    function setContributors() {
+
+      var select = document.getElementById("contributors");
+      var cont_list = document.getElementById("cont_list")
+
+      var contributors = ""
+
+      for (var i = 0, len = select.options.length; i < len; i++) {
+        opt = select.options[i];
+        contributors = contributors.concat(opt.text, "%")
+      }
+
+      cont_list.value = contributors
+
+    }
+  </script>
+</head>
+
+<body>
+
+  {% if duplicate == True: %}
+  <h3 style="color:red">The artist {{name}} {{surname}} already exists! Go back and check that artist in the list on the
+    left!</h3>
+  {%else%}
+
+  <h2>{{name}} {{surname}}</h2>
+
+  <input class="button button5" style="width: 10%;" type="button" onclick="location.href='/artist';"
+    value="Log Out" />
+
+  <div class="row">
+
+    <div class="column" style="background-color:#aaa;">
+      <h2>Album</h2>
+      <div class="w3-container">
+        <h2>Create a new Album!</h2>
+        <form action="/artistProfile?artist={{name}}_{{surname}}" , method="post">
+          <label for="ID">ID:</label><br>
+          <input type="text" id="ID" name="ID" required><br>
+          <label for="genre">Genre:</label><br>
+          <input type="text" id="genre" name="genre" required><br>
+          <label for="title">Title:</label><br>
+          <input type="text" id="title" name="title" required><br><br>
+          <input type="submit" value="submit">
+        </form>
+      </div>
+
+      <h2>Modify an album!</h2>
+      <div class="w3-container" style="overflow-y: hidden;">
+        <p>Choose the album you want to modify!</p>
+
+        {% if album_list|length == 0%}
+        <h3>No Album Available. Please add an album!</h3>
+        {% else %}
+        <form action="/albumPage" , method="GET">
+          <select style="width: 100%;" id="album" name="album" size=10 required>
+            {% for row in album_list %}
+
+            <option value="{{row[0]}}">{{row[0]}}-{{row[2]}} ({{row[1]}})</option>
+
+            {% endfor %}
+          </select>
+          <input type="hidden" id="artist" name="artist" value="{{name}}_{{surname}}">
+          <input class="button button5" type="submit">
+        </form>
+        {% endif %}
+
+
+
+      </div>
+
+    </div>
+
+    <div class="column" style="background-color:#bbb;">
+      <h2>Song</h2>
+      <div class="w3-container">
+        <h2>Create a new Song!</h2>
+        <form action="/artistProfile?artist={{name}}_{{surname}}" , method="post">
+          <label for="ID">ID:</label><br>
+          <input type="text" id="ID" name="ID" required><br>
+
+          <label for="title">Title:</label><br>
+          <input type="text" id="title" name="title" required><br>
+
+          <label for="song_album">Choose the album of the song:</label><br>
+          <select style="width: 90%;" id="song_album" name="song_album" size=5 required>
+            {% for row in album_list %}
+
+            <option value="{{row[0]}}">{{row[0]}}-{{row[2]}} ({{row[1]}})</option>
+
+            {% endfor %}
+          </select> <br>
+
+          <label for="source">Choose contributors:</label><br>
+          <select style="width: 45%;" id="source" size=5>
+            {% for row in artist_list %}
+
+            <option value="{{row[1]}} {{row[2]}}">{{row[1]}} {{row[2]}}</option>
+
+            {% endfor %}
+          </select>
+          <select style="width: 45%;" name="contributors" id="contributors" size=5>
+
+          </select>
+          <button type="button" onclick="addContributor()">Add Contributor</button>
+          <button type="button" onclick="removeContributor()">Remove Contributor</button><br>
+          <input type="hidden" id="cont_list" name="cont_list" value="default_value">
+
+          <input type="submit" value="Submit" onclick="setContributors()">
+        </form>
+      </div>
+
+
+      <h2>Modify a song!</h2>
+      <div class="w3-container" style="overflow-y: hidden;">
+        <p>Choose the song you want to modify!</p>
+
+        {% if song_list|length == 0%}
+        <h3>No Song Available. Please add a song!</h3>
+        {% else %}
+        <form action="/songPage" , method="GET">
+          <select style="width: 100%;" id="song" name="song" size=10 required>
+            {% for row in song_list %}
+
+            <option value="{{row[0]}}">{{row[0]}}-{{row[1]}} </option>
+
+            {% endfor %}
+          </select>
+          <input type="hidden" id="artist" name="artist" value="{{name}}_{{surname}}">
+          <input class="button button5" type="submit">
+        </form>
+        {% endif %}
+
+
+
+      </div>
+
+    </div>
+  </div>
+
+  {% endif %}
+
+</body>
+
+</html>

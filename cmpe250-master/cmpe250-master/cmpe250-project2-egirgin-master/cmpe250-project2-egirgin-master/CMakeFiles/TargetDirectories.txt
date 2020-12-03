@@ -1,0 +1,3 @@
+/cygdrive/c/Users/emregirgin/CLionProjects/AirportSimulator/CMakeFiles/edit_cache.dir
+/cygdrive/c/Users/emregirgin/CLionProjects/AirportSimulator/CMakeFiles/project2.dir
+/cygdrive/c/Users/emregirgin/CLionProjects/AirportSimulator/CMakeFiles/rebuild_cache.dir
